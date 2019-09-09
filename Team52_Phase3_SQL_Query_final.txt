@@ -1,0 +1,1157 @@
+Screen 1: user login
+Task1:sc1_email_exist
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc1_email_exist`(in input_email varchar(50))
+BEGIN
+SELECT emailaddress 
+FROM useremail
+where emailaddress = input_email;
+END
+
+
+
+
+Task2:sc1_login_verify
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc1_login_verify`(in input_email varchar(50), input_password varchar(50), input_status varchar(50))
+BEGIN
+select * from user, useremail
+where emailaddress = input_email and password = input_password and status = input_status;
+END
+
+
+
+
+
+Screen 3:
+ register user only
+Task1:sc3_user_registration
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc3_user_registration`(in input_username varchar(50), in input_firstname varchar(50), in input_lastname varchar(50), in input_password varchar(50), in input_email varchar(50))
+BEGIN
+insert into user (username, firstname, lastname, status,password)
+values(input_username, input_firstname, input_lastname,'pending',input_password);
+insert into useremail(emailaddress, username)
+values(input_email,input_username);
+delete from useremail where emailaddress not like '_%@_%._%';
+delete from user  where length(password) < 8;
+END
+
+
+
+
+Task2: sc3_display_email
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc3_display_email`(in input_username varchar(50))
+BEGIN
+select emailaddress
+from useremail
+where username=input_username;
+END
+
+
+
+
+Task3: sc3_delete_email
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc3_delete_email`(in input_email varchar(50))
+BEGIN
+delete
+from useremail
+where emailaddress=input_email;
+END
+
+
+
+
+
+Screen 4:
+ register visitor only
+Task1: sc4_visitor_registration
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc4_visitor_registration`(in input_username varchar(50), in input_firstname varchar(50), in input_lastname varchar (50), in input_password varchar(50),in input_email varchar(50))
+BEGIN
+insert into user (username, firstname, lastname, status,password)
+values(input_username, input_firstname, input_lastname,'pending',input_password);
+insert into useremail(emailaddress, username)
+values(input_email,input_username);
+delete from useremail where emailaddress not like '_%@_%._%';
+insert into visitor(username)
+values(input_username);
+delete from user  where length(password) < 8;
+END
+
+
+
+
+Task2: sc4_display_email
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc4_display_email`(in input_username varchar (50))
+BEGIN
+select emailaddress
+from useremail
+where username=input_username;
+END
+
+
+
+Task
+3: sc4_delete_email
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc4_delete_email`(in input_email varchar(50))
+BEGIN
+delete
+from useremail
+where emailaddress=input_email;
+END
+
+
+
+
+
+Screen 5:
+ register employee only
+Task1: sc5_manager_registration
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc5_manager_registration`(in input_username varchar(50), in input_firstname varchar(50), in input_lastname varchar(50), in input_password varchar(50), in input_id varchar(9), in input_phone varchar(10), in input_address varchar(90), in input_city varchar(50), in input_state varchar(50), in input_zipcode varchar(5), input_email varchar(50))
+BEGIN
+insert into user (username, firstname, lastname, status,password)
+values(input_username, input_firstname, input_lastname,'pending',input_password);
+insert into employee(employeeid, phone, address, city, state, zipcode, username)
+values (input_id,input_phone,input_address,input_city,input_state,input_zipcode,input_username);
+insert into useremail(emailaddress, username)
+values(input_email,input_username);
+insert into manager(username)
+values(input_username);
+delete from user where length(password)<8 or username in
+(select username from employee where  length(phone)!=10 or length(zipcode)!=5)
+or username in (select username from useremail where emailaddress not like '_%@_%._%');
+END
+
+
+
+
+Task2: sc5_staff_registration
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc5_staff_registration`(in input_username varchar(50), in input_firstname varchar(50), in input_lastname varchar(50), in input_password varchar(50), in input_id varchar(9), in input_phone varchar(10), in input_address varchar(90), in input_city varchar(50), in input_state varchar(50), in input_zipcode varchar(5), input_email varchar(50))
+BEGIN
+insert into user (username, firstname, lastname, status,password)
+values(input_username, input_firstname, input_lastname,'pending',input_password);
+insert into employee(employeeid, phone, address, city, state, zipcode, username)
+values (input_id,input_phone,input_address,input_city,input_state,input_zipcode,input_username);
+insert into useremail(emailaddress, username)
+values(input_email,input_username);
+insert into staff(username)
+values(input_username);
+delete from user where length(password)<8 or username in
+(select username from employee where  length(phone)!=10 or length(zipcode)!=5)
+or username in (select username from useremail where emailaddress not like '_%@_%._%');
+END
+
+
+
+
+Task3: sc5_delete_email
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc5_delete_email`(in input_email varchar(50))
+BEGIN
+delete 
+from useremail
+where emailaddress=input_email;
+END
+
+
+
+
+Task4: sc5_display_email
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc5_display_email`(in input_username varchar(50))
+BEGIN
+select emailaddress
+from useremail
+where username=input_username;
+END
+
+
+
+
+
+Screen 6: register employee-visitor
+Task1: sc6_manager_registration
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc6_manager_registration`(in input_username varchar(50), in input_firstname varchar(50), in input_lastname varchar(50), in input_password varchar(50), in input_id varchar(9), in input_phone varchar(10), in input_address varchar(90), in input_city varchar(50), in input_state varchar(50), in input_zipcode varchar(5), input_email varchar(50))
+BEGIN
+insert into user (username, firstname, lastname, status,password)
+values(input_username, input_firstname, input_lastname,'pending',input_password);
+insert into employee(employeeid, phone, address, city, state, zipcode, username)
+values (input_id,input_phone,input_address,input_city,input_state,input_zipcode,input_username);
+insert into useremail(emailaddress, username)
+values(input_email,input_username);
+insert into manager(username)
+values(input_username);
+insert into visitor(username)
+values(input_username);
+delete from user where length(password)<8 or username in
+(select username from employee where  length(phone)!=10 or length(zipcode)!=5)
+or username in (select username from useremail where emailaddress not like '_%@_%._%');
+END
+
+
+
+
+Task2: sc6_staff_registration
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc6_staff_registration`(in input_username varchar(50), in input_firstname varchar(50), in input_lastname varchar(50), in input_password varchar(50), in input_id varchar(9), in input_phone varchar(10), in input_address varchar(90), in input_city varchar(50), in input_state varchar(50), in input_zipcode varchar(5), input_email varchar(50))
+BEGIN
+insert into user (username, firstname, lastname, status,password)
+values(input_username, input_firstname, input_lastname,'pending',input_password);
+insert into employee(employeeid, phone, address, city, state, zipcode, username)
+values (input_id,input_phone,input_address,input_city,input_state,input_zipcode,input_username);
+insert into useremail(emailaddress, username)
+values(input_email,input_username);
+insert into staff(username)
+values(input_username);
+insert into visitor(username)
+values(input_username);
+delete from user where length(password)<8 or username in
+(select username from employee where  length(phone)!=10 or length(zipcode)!=5)
+or username in (select username from useremail where emailaddress not like '_%@_%._%');
+END
+
+
+
+
+Task3: sc6_delete_email
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc6_delete_email`(in input_email varchar(50))
+BEGIN
+delete 
+from useremail
+where emailaddress=input_email;
+END
+
+4. sc6_display_email
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc6_display_email`(in input_username varchar(50))
+BEGIN
+select emailaddress
+from useremail
+where username=input_username;
+END
+
+
+
+
+
+Screen 15: 
+user take transit
+Task1: sc15_filter
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc15_filter`(in input_sitename varchar(50), in lower_price decimal(5,0), in upper_price decimal(5,0), in input_transport varchar(50))
+BEGIN
+set global sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+set session sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+select c.sitename, t.route,t.type,t.price,count(*) as connected_sites
+from connect as c, transit as t
+where price between lower_price and upper_price
+and c.type = t.type
+and c.sitename = input_sitename	
+and c.type = input_transport
+group by c.type;
+END
+
+
+
+
+Task2: sc15_log_date
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc15_log_date`(in input_username varchar(50), in input_type varchar(50), in input_route varchar(50), in input_date date)
+BEGIN
+insert into take(username, type, route, date)
+values(input_username,input_type,input_route,input_date);
+END
+
+
+
+
+Screen 16: user transit history
+task1: show a user transit history
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc16_Transit_History`(in Username varchar(100), in Transport_Type varchar(100), 
+in Contain_Site varchar(100), in Route varchar(100), in Start_Date date, in End_Date date)
+BEGIN
+select distinct a.date, a.route, a.type, b.price 
+from take a 
+left join transit b 
+on a.route = b.route and a.type = b.type 
+left join connect c 
+on a.route = c.route and a.type = c.type
+where a.username = Username and a.route = Route and a.date >= Start_Date and a.date <= End_Date
+union
+select distinct a.date, a.route, a.type, b.price 
+from take a 
+left join transit b 
+on a.route = b.route and a.type = b.type 
+left join connect c 
+on a.route = c.route and a.type = c.type
+where a.username = Username and c.sitename = Contain_Site and a.date >= Start_Date and a.date <= End_Date
+union
+select distinct a.date, a.route, a.type, b.price 
+from take a 
+left join transit b 
+on a.route = b.route and a.type = b.type 
+left join connect c 
+on a.route = c.route and a.type = c.type
+where a.username = Username and a.type = Transport_Type and a.date >= Start_Date and a.date <= End_Date;
+END
+
+
+
+Screen 17: employee mange profile
+Task1: view profile
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s17_view`(in myUsername varchar(100))
+BEGIN
+select u.firstname as 'First Name', u.lastname as 'Last Name', u.username as 'Username', s.name as 'Site Name', e.employeeid as 'Employee ID', e.phone as 'Phone Number', e.address as 'Address', 
+!isnull((select username from visitor where exists(select username from employee) and username = myUsername)) as 'Is Visitor Account?'
+from user u 
+left join site s 
+on u.username = s.managerusername
+left join employee e
+on u.username = e.username
+left join visitor v
+on u.username = v.username
+where u.username = myUsername;
+END
+
+
+Task2: deselecting visitor
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s17_not_visitor`(in myUsername varchar(100))
+BEGIN
+delete from visitor where username = myUsername;
+delete from visitevent where username = myUsername;
+delete from visitsite where username = myUsername;
+delete from take where username = myUsername;
+END
+
+
+Task3: add email
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s17_add_email`(in myUsername varchar(100),  newEmail varchar(100))
+BEGIN
+insert into useremail(emailaddress, username) value (newEmail, myUsername);
+END
+
+Task 4: view emails
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s17_view emails`(in myUsername varchar(100))
+BEGIN
+select emailaddress as 'Email Address' from useremail
+where username = myUsername;
+END
+
+
+Task5: add visitor account
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s17_add to visitor account`(in myUsername varchar(100))
+BEGIN
+insert into visitor(username) values (myUsername);
+END
+
+
+Task6: update name and phone
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s17_update name and phone`(in myUsername varchar(100), in newFirstname varchar(100), in newLastname varchar(100), 
+	in newPhone decimal(10,0) )
+BEGIN
+update user set firstname = newFirstname,  lastname = newLastname where username = myUsername;
+update employee set phone = newPhone where username = myUsername;
+END
+
+
+Task7: delete email
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s17_delete email`(in myUsername varchar(100), in deleteEmail varchar(100))
+BEGIN
+delete from useremail where username = myUsername and emailaddress = deleteEmail;
+END
+
+
+
+Screen 18: administrator manage user
+-- create info for all administrators
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `user_admin` AS
+    SELECT 
+        `a`.`username` AS `username`,
+        COUNT(`e`.`emailaddress`) AS `email_count`,
+        'administrator' AS `usertype`,
+        `u`.`status` AS `status`
+    FROM
+        ((`administrator` `a`
+        LEFT JOIN `user` `u` ON ((`u`.`username` = `a`.`username`)))
+        LEFT JOIN `useremail` `e` ON ((`e`.`username` = `a`.`username`)))
+    GROUP BY `a`.`username`
+
+-- create info for all managers
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `user_manager` AS
+    SELECT 
+        `m`.`username` AS `username`,
+        COUNT(`e`.`emailaddress`) AS `email_count`,
+        'manager' AS `usertype`,
+        `u`.`status` AS `status`
+    FROM
+        ((`manager` `m`
+        LEFT JOIN `user` `u` ON ((`u`.`username` = `m`.`username`)))
+        LEFT JOIN `useremail` `e` ON ((`e`.`username` = `m`.`username`)))
+    GROUP BY `m`.`username`
+
+-- create info for all staff
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `user_staff` AS
+    SELECT 
+        `s`.`username` AS `username`,
+        COUNT(`e`.`emailaddress`) AS `email_count`,
+        'staff' AS `usertype`,
+        `u`.`status` AS `status`
+    FROM
+        ((`staff` `s`
+        LEFT JOIN `user` `u` ON ((`u`.`username` = `s`.`username`)))
+        LEFT JOIN `useremail` `e` ON ((`e`.`username` = `s`.`username`)))
+    GROUP BY `s`.`username`
+
+-- create info for all users
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `user_user` AS
+    SELECT 
+        `u`.`username` AS `username`,
+        COUNT(`e`.`emailaddress`) AS `email_count`,
+        'user' AS `usertype`,
+        `u`.`status` AS `status`
+    FROM
+        (`user` `u`
+        LEFT JOIN `useremail` `e` ON ((`e`.`username` = `u`.`username`)))
+    GROUP BY `u`.`username`
+
+-- create info for all visitors
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `user_visitor` AS
+    SELECT 
+        `v`.`username` AS `username`,
+        COUNT(`e`.`emailaddress`) AS `email_count`,
+        'visitor' AS `usertype`,
+        `u`.`status` AS `status`
+    FROM
+        ((`visitor` `v`
+        LEFT JOIN `user` `u` ON ((`u`.`username` = `v`.`username`)))
+        LEFT JOIN `useremail` `e` ON ((`e`.`username` = `v`.`username`)))
+    GROUP BY `v`.`username`
+
+-- combine all info for every one
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `user_combine` AS
+    SELECT 
+        `user_manager`.`username` AS `username`,
+        `user_manager`.`email_count` AS `email_count`,
+        `user_manager`.`usertype` AS `usertype`,
+        `user_manager`.`status` AS `status`
+    FROM
+        `user_manager` 
+    UNION SELECT 
+        `user_staff`.`username` AS `username`,
+        `user_staff`.`email_count` AS `email_count`,
+        `user_staff`.`usertype` AS `usertype`,
+        `user_staff`.`status` AS `status`
+    FROM
+        `user_staff` 
+    UNION SELECT 
+        `user_user`.`username` AS `username`,
+        `user_user`.`email_count` AS `email_count`,
+        `user_user`.`usertype` AS `usertype`,
+        `user_user`.`status` AS `status`
+    FROM
+        `user_user` 
+    UNION SELECT 
+        `user_visitor`.`username` AS `username`,
+        `user_visitor`.`email_count` AS `email_count`,
+        `user_visitor`.`usertype` AS `usertype`,
+        `user_visitor`.`status` AS `status`
+    FROM
+        `user_visitor` 
+    UNION SELECT 
+        `user_admin`.`username` AS `username`,
+        `user_admin`.`email_count` AS `email_count`,
+        `user_admin`.`usertype` AS `usertype`,
+        `user_admin`.`status` AS `status`
+    FROM
+        `user_admin`
+
+
+Task1: view user information
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc18_view`(in myUsername varchar(100), in chooseUsername varchar(100), 
+in chooseType varchar(100), in chooseStatus varchar(100))
+BEGIN
+select distinct username, email_count, usertype, status
+from user_combine c
+where username = chooseUsername and myUsername = (select username from user_combine where usertype = 'administrator')
+union
+select distinct username, email_count, usertype, status
+from user_combine c
+where usertype = chooseType and myUsername = (select username from user_combine where usertype = 'administrator')
+union
+select distinct username, email_count, usertype, status
+from user_combine c
+where status = chooseStatus and myUsername = (select username from user_combine where usertype = 'administrator');
+END
+
+
+
+Task2: approve users
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s18_approve`(in myUsername varchar(100), in newUsername varchar(100))
+BEGIN
+update user set status = 'Approved' where username = newUsername and exists(select * from administrator where username = myUsername);
+END
+
+
+Task3: decline users
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc18_decline`(in myUsername varchar(100), in newUsername varchar(100))
+BEGIN
+update user set status = 'Declined' where username = newUsername and exists(select * from administrator where username = myUsername) and status != 'Approved';
+END
+
+
+
+Screen 19: administrator manage site
+Task1: filter
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc19_filter`(in myUsername varchar(100), in mySite varchar(100), in myManager varchar(100), 
+in myOpen varchar(100))
+BEGIN
+select distinct s.name, concat(u.firstname, ' ', u.lastname) as 'manager',  s.openeveryday
+from site s
+left join user u
+on s.managerusername = u.username
+where s.managerusername = myManager and exists(select myUsername from administrator)
+union
+select distinct s.name, concat(u.firstname, ' ', u.lastname) as 'manager',  s.openeveryday
+from site s
+left join user u
+on s.managerusername = u.username
+where s.name = mySite and exists(select myUsername from administrator)
+union
+select distinct s.name, concat(u.firstname, ' ', u.lastname) as 'manager',  s.openeveryday
+from site s
+left join user u
+on s.managerusername = u.username
+where s.openeveryday = myOpen and exists(select myUsername from administrator);
+END
+
+
+Task2: delete sites
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s19_delete`(in myUsername varchar(100), in mySitename varchar(100), in myManagername varchar(100), in myOpen varchar(100))
+BEGIN
+delete from site where name = myUsername and manager = myManagername and openeveryday = myOpen;
+delete from assign_to where sitename = mySitename;
+delete from visitevent where sitename = mySitename;
+delete from visitsite where sitename = mySitename;
+END
+
+
+
+Screen 20: administrator edit site
+Task1: filter sites
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s20_filter`(in myUsername varchar(100))
+BEGIN
+select s.name, s.zipcode, s.address, s.openeveryday, concat(u.firstname, ' ', u.lastname) as 'manager'
+from site s
+left join user u
+on s.managerusername = u.username
+where s.managerusername = myUsername;
+END
+
+
+Task2: update sites
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s20_update`(in oldSitename varchar(100), in oldZipcode decimal(5,0), in oldOpen varchar(100), in newSitename varchar(100), in newZipcode decimal(5,0), in newOpen varchar(100))
+BEGIN
+update site set name = newSitename and zipcode = newSitename and address = newSitename and openeveryday = newOpen
+where name = oldSitename and zipcode = oldZipcode and address = oldOpen and openeveryday = oldOpen;
+END
+
+
+
+Screen 21: adminstrator create site
+Task1: filter sites
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s21_filter`(in myUsername varchar(100))
+BEGIN
+select s.name, s.zipcode, s.address, s.openeveryday, concat(u.firstname, ' ', u.lastname) as 'manager'
+from site s
+left join user u
+on s.managerusername = u.username
+where s.managerusername = myUsername;
+END
+
+
+Task2: add new sites
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s21_add`(in newName varchar(100), in newZip decimal(5,0), in newAdd varchar(100), in newOpen varchar(100), in newManageruser varchar(100))
+BEGIN
+insert into site (name, zipcode, address, openeveryday, managerusername) values
+(newName, newZip, newAdd, newOpen, newManageruser);
+END
+
+
+
+Screen 22: Manage transit
+Task1: Manage_Transit
+-- create a view as Manage_Transit
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `manage_transit` AS
+    SELECT 
+        `q`.`route` AS `route`,
+        `q`.`type` AS `type`,
+        `q`.`price` AS `price`,
+        `q`.`connected_sites` AS `connected_sites`,
+        COUNT(0) AS `transit_logged`
+    FROM
+        ((SELECT 
+            `transit`.`route` AS `route`,
+                `transit`.`type` AS `type`,
+                `transit`.`price` AS `price`,
+                COUNT(0) AS `connected_sites`
+        FROM
+            (`transit`
+        JOIN `connect`)
+        WHERE
+            ((`transit`.`type` = `connect`.`type`)
+                AND (`transit`.`route` = `connect`.`route`))
+        GROUP BY `transit`.`route` , `transit`.`type`) `q`
+        JOIN `take`)
+    WHERE
+        ((`q`.`route` = `take`.`route`)
+            AND (`q`.`type` = `take`.`type`))
+    GROUP BY `q`.`route` , `q`.`type`
+
+---create stored procedure as Manage_Transit
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(22) Manage_Transit`(in Contain_Site varchar(50), in Route varchar(50), in Transport_Type varchar(50), Price_High decimal(3,2), Price_Low decimal(3, 2))
+BEGIN
+SELECT *
+FROM Manage_Transit
+WHERE Contain_Site in  (SELECT sitename 
+			            FROM Manage_Transit, connect
+                        WHERE Manage_Transit.route = connect.route and Manage_Transit.type = connect.type)
+	  and route = Route and type = Transport_Type and  price >= Price_Low and price <= Price_High;
+END
+
+
+
+Screen 23: Administrator edit transit
+Task1: Display_Current_Connected_Sites
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(23) Display_Current_Connected_Sites`(in Transport_Type varchar(50), in Route varchar(50), in Price decimal(3,2))
+BEGIN
+SELECT connect.sitename
+FROM Manage_Transit, connect
+WHERE Manage_Transit.type = Transport_Type and Manage_Transit.route = Route and Manage_Transit.price = Price and 
+	 connect.type = Manage_Transit.type and connect.route = Manage_Transit.route;
+END
+
+
+Task2: Edit_Connected_Sites
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(23) Edit_Connected_Sites`(in Site_Name varchar(50), in Transport_Type varchar(50), in Route varchar(50))
+BEGIN
+DELETE FROM connect
+WHERE sitename = Site_Name and connect.type = Transport_Type and connect.route = Route;
+END
+
+
+
+Screen 24: Administrator create transit
+Task1: Create_Transit
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(24) Create_Transit`(in Transport_Type varchar(50), in Route varchar(50), in Price decimal(3, 2), in Site_Name varchar(50))
+BEGIN
+INSERT INTO transit
+VALUE (Transport_Type, Route, Price);
+INSERT INTO connect
+VALUE (Site_Name, Transport_Type, Route);
+END
+
+
+
+Screen 25: manager manage event
+Task1:Manage_Event
+--- create a view
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `manage_event` AS
+    SELECT 
+        `event`.`name` AS `name`,
+        `event`.`startdate` AS `startdate`,
+        `event`.`enddate` AS `enddate`,
+        `event`.`sitename` AS `sitename`,
+        `event`.`price` AS `price`,
+        `q`.`staff_count` AS `staff_count`,
+        ((TO_DAYS(`event`.`enddate`) - TO_DAYS(`event`.`startdate`)) + 1) AS `durations`,
+        `q`.`total_visits` AS `total_visits`,
+        (`q`.`total_visits` * `event`.`price`) AS `total_revenue`,
+        `event`.`description` AS `description`
+    FROM
+        (`event`
+        JOIN (SELECT 
+            `q_sc`.`name` AS `name`,
+                `q_sc`.`startdate` AS `startdate`,
+                `q_sc`.`sitename` AS `sitename`,
+                `q_sc`.`staff_count` AS `staff_count`,
+                `q_tv`.`total_visits` AS `total_visits`
+        FROM
+            ((SELECT 
+            `assign_to`.`eventname` AS `name`,
+                `assign_to`.`startdate` AS `startdate`,
+                `assign_to`.`sitename` AS `sitename`,
+                COUNT(0) AS `staff_count`
+        FROM
+            `assign_to`
+        GROUP BY `assign_to`.`eventname` , `assign_to`.`startdate` , `assign_to`.`sitename`) `q_sc`
+        JOIN (SELECT 
+            `visitevent`.`ename` AS `name`,
+                `visitevent`.`startdate` AS `startdate`,
+                `visitevent`.`sitename` AS `sitename`,
+                COUNT(0) AS `total_visits`
+        FROM
+            `visitevent`
+        GROUP BY `visitevent`.`ename` , `visitevent`.`startdate` , `visitevent`.`sitename`) `q_tv` ON (((`q_sc`.`name` = `q_tv`.`name`)
+            AND (`q_sc`.`startdate` = `q_tv`.`startdate`)
+            AND (`q_sc`.`sitename` = `q_tv`.`sitename`))))) `q`)
+    WHERE
+        ((`event`.`name` = `q`.`name`)
+            AND (`event`.`startdate` = `q`.`startdate`)
+            AND (`event`.`sitename` = `q`.`sitename`))
+
+--- create a stored procedure to show event
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(25) Manage_Event`(in Event_Name varchar(50), in Description_Keyword longtext, in Start_Date date, in End_Date date,  in Duration_Low int(8), in Duration_High int(8), in Total_Visit_Low int(8), in Total_Visit_High bigint(21))
+BEGIN
+Select name, staff_count, durations, total_visits, total_revenue
+FROM Manage_Event
+WHERE name = Event_Name and startdate = Start_Date and enddate = End_Date 
+	  and durations >= Duration_Low and durations <= Duration_High 
+      and total_visits >= Total_Visit_Low and total_visits <= Total_Visit_High
+      and description = "%" + Description_Keyword + "%";
+END
+
+
+
+Screen 26: manager view/edit event
+Task1: View Event Staff
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(26) View Event Staff`(in Event_Name varchar(25), in Price decimal(2, 0), in Start_Date date, in End_Date date)
+BEGIN
+(SELECT username as staff_assigned
+FROM staff
+WHERE username not in (SELECT distinct staffusername FROM assign_to))
+UNION
+(SELECT Q.staffusername as staff_assigned
+FROM (SELECT M.name, M.startdate, M.enddate, M.sitename, M.price, A.staffusername 
+	FROM (assign_to as A join Manage_Event as M on A.eventname=M.name and A.startdate=M.startdate and A.sitename=M.sitename)) as Q
+WHERE Q.name = Event_Name and Q.price = Price and Q.startdate = Start_Date and Q.enddate = End_Date);
+END
+
+
+Task2: View_Event_Visit&Revenue
+--- create a date list view
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `datelist` AS
+    SELECT 
+        `v`.`selected_date` AS `selected_date`
+    FROM
+        (SELECT 
+            ('1970-01-01' + INTERVAL (((((`t4`.`i` * 10000) + (`t3`.`i` * 1000)) + (`t2`.`i` * 100)) + (`t1`.`i` * 10)) + `t0`.`i`) DAY) AS `selected_date`
+        FROM
+            (((((SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t0`
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t1`)
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t2`)
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t3`)
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t4`)) `v`
+    WHERE
+        (`v`.`selected_date` BETWEEN '2019-01-01' AND '2019-02-19')
+
+--- create a view to show daily events
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `event_daily_price` AS
+    SELECT 
+        `event`.`name` AS `name`,
+        `datelist`.`selected_date` AS `selected_date`,
+        `event`.`price` AS `price`
+    FROM
+        (`event`
+        JOIN `datelist`)
+    WHERE
+        ((`datelist`.`selected_date` >= `event`.`startdate`)
+            AND (`datelist`.`selected_date` <= `event`.`enddate`))
+
+--- create a view to show daily visits and daily revenue
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `event_daily_price_visit` AS
+    SELECT 
+        `q`.`name` AS `name`,
+        `q`.`selected_date` AS `selected_date`,
+        `q`.`price` AS `price`,
+        COUNT(0) AS `daily_visits`,
+        (COUNT(0) * `q`.`price`) AS `daily_revenue`
+    FROM
+        (`event_daily_price` `q`
+        JOIN `visitevent`)
+    WHERE
+        ((`q`.`name` = `visitevent`.`ename`)
+            AND (`q`.`selected_date` >= `visitevent`.`startdate`)
+            AND (`q`.`selected_date` <= `visitevent`.`date`))
+    GROUP BY `q`.`name` , `q`.`selected_date`
+
+---a stored procudure to filter
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(26) View_Event_Visit&Revenue`(
+in Event_Name varchar(50), in Price decimal(2,0), in Start_Date date, in End_Date date,
+in Daily_Visit_Low int(8), in Daily_Visit_High int(8), in Daily_Revenue_Low int(8), in Daily_Revenue_High int(8))
+BEGIN
+SELECT name, selected_date, daily_visits, daily_revenue
+FROM event_daily_price_visit
+WHERE name = Event_Name and price = Price
+and daily_revenue >= Daily_Revenue_Low and daily_revenue <= Daily_Revenue_High
+and daily_visits >= Daily_Visit_Low and daily_visits <= Daily_Visit_High
+and selected_date >= Start_Date and selected_date <= End_Date;
+END
+
+
+Task3:Edit_Event_Description
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(26) Edit_Event_Description`(in Event_Description longtext,
+in Event_Name varchar(50), in Start_Date date, in Site_Name varchar(50))
+BEGIN
+UPDATE event
+SET description = Event_Description
+WHERE name=Event_Name and startdate=Start_Date and sitename=Site_Name;
+END
+
+
+Task4: Edit_Event_Staff(Delete)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(26) Edit_Event_Staff(Delete)`(
+in Staff_Name varchar(50), in Event_Name varchar(50), in Start_Date date)
+BEGIN
+DELETE FROM assign_to
+WHERE assign_to.eventname = Event_Name and assign_to.staffusername = Staff_Name 
+and assign_to.startdate = Start_Date;
+END
+
+Task5: Edit_Event_Staff(Insert)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(26) Edit_Event_Staff(Insert)`(
+in Staff_Name varchar(50), in Event_Name varchar(50), in Start_Date date, in Site_Name varchar(50))
+BEGIN
+INSERT INTO assign_to
+VALUE (Staff_Name, Event_Name, Start_Date, Site_Name);
+END
+
+
+
+Screen 27: manager create event
+Task1: Create_Event
+CREATE DEFINER=`root`@`localhost` PROCEDURE `(27) Create_Event`(
+in Event_Name varchar(50), in Site_Name varchar(50), 
+in Start_Date date, in End_Date date,
+in Price decimal(2,0), in Capacity decimal(6,0),
+in Min_Staff_Required decimal(1,0), in Event_Description longtext,
+in Assigned_Staff varchar(50))
+BEGIN
+INSERT INTO event 
+VALUE (Event_Name, Start_Date, Site_Name, End_Date, Price, Capacity, Min_Staff_Required, Event_Description);
+INSERT INTO assign_to
+VALUE (Assigned_Staff, Event_Name, Start_Date, Site_Name);
+END
+
+
+
+Screen 28: Manager manage staff
+Task1: retrieve the staff name and event shifts based on the inputs: site, first name, last name, start date, end date
+---Stored Procedures: sc28
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc28`(in input_site varchar(100), in input_FirstName varchar(100), in input_LastName varchar(100), in input_startdate date, in input_enddate date)BEGINSELECT distinct user.firstname AS First_Name, user.lastname as Last_Name, another_view28.eventshift AS Event_ShiftFROM another_view28, user where another_view28.staffname = user.username	and another_view28.Date > input_startdate and another_view28.Date < input_enddate and user.firstname LIKE concat('%',input_FirstName,'%') and user.lastname LIKE concat('%',input_LastName,'%') and another_view28.Site = input_site;END
+
+---view1: view28
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `view28` AS    SELECT         `assign_to`.`staffusername` AS `Staff_Name`,        COUNT(0) AS `Event_Shift`    FROM        `assign_to`    GROUP BY `assign_to`.`staffusername`3) view2: another_view28CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `another_view28` AS    SELECT         `assign_to`.`staffusername` AS `staffname`,        `view28`.`Event_Shift` AS `eventshift`,        `assign_to`.`startdate` AS `Date`,        `assign_to`.`sitename` AS `Site`    FROM        (`view28`        JOIN `assign_to`)    WHERE        (`assign_to`.`staffusername` = `view28`.`Staff_Name`)
+
+
+
+Screen 29: Manager site report
+Task1: retrieve date, event count, staff count, total visit, total revenue based on the inputs: start date, end date, event count range, staff count range, total visits range, total revenue range
+---Stored Procedures: sc29
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc29`(in input_startdate date, in input_enddate date, in input_eventCountRange_min int, in input_eventCountRange_max int, in input_staffCountRange_min int, in input_staffCountRange_max int, in input_totalVisitCountRange_min int, in input_totalVisitCountRange_max int, in input_totalRevenueCountRange_min int, in input_totalRevenueCountRange_max int)
+BEGIN
+SELECT eventcount.selected_date, eventcount.eventcount AS Event_Count, event_staff_datelist1.event_staff_count AS Staff_Count, totalvisits.totalvisit AS Total_Visits, total_revenues_visit.totalrevenue AS Total_Revenue
+from eventcount, event_staff_datelist1, totalvisits, total_revenues_visit
+where eventcount.selected_date = event_staff_datelist1.selected_date and eventcount.selected_date = totalvisits.date and eventcount.selected_date = total_revenues_visit.selected_date 
+	and eventcount.selected_date > input_startdate and eventcount.selected_date < input_enddate and eventcount.eventcount > input_eventCountRange_min and eventcount.eventcount < input_eventCountRange_max
+	and event_staff_datelist1.event_staff_count > input_staffCountRange_min and event_staff_datelist1.event_staff_count < input_staffCountRange_max and totalvisits.totalvisit >= input_totalVisitCountRange_min and totalvisits.totalvisit <= input_totalVisitCountRange_max and total_revenues_visit.totalrevenue >= input_totalRevenueCountRange_min and total_revenues_visit.totalrevenue <= input_totalRevenueCountRange_max;
+END
+
+---view1: eventcount
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `eventcount` AS    SELECT         `datelist`.`selected_date` AS `selected_date`,        COUNT(0) AS `eventcount`    FROM        (`datelist`        JOIN `event` ON ((`datelist`.`selected_date` BETWEEN `event`.`startdate` AND `event`.`enddate`)))    GROUP BY `datelist`.`selected_date`
+
+---view2: event_staff
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `event_staff` AS    SELECT         `assign_to`.`eventname` AS `eventname`,        COUNT(0) AS `event_staff_count`,        `assign_to`.`startdate` AS `startdate`,        `assign_to`.`sitename` AS `sitename`,        `event`.`enddate` AS `enddate`    FROM        (`event`        JOIN `assign_to`)    WHERE        ((`event`.`name` = `assign_to`.`eventname`)            AND (`event`.`sitename` = `assign_to`.`sitename`)            AND (`event`.`startdate` = `assign_to`.`startdate`))    GROUP BY `assign_to`.`eventname` , `assign_to`.`sitename` , `assign_to`.`startdate`
+
+---view3: event_staff_datelist
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `event_staff_datelist` AS    SELECT         `datelist`.`selected_date` AS `selected_date`,        SUM(`event_staff`.`event_staff_count`) AS `event_staff_count`    FROM        (`event_staff`        JOIN `datelist` ON ((`datelist`.`selected_date` BETWEEN `event_staff`.`startdate` AND `event_staff`.`enddate`)))    GROUP BY `datelist`.`selected_date`
+
+---view4: datelist1
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `datelist1` AS
+    SELECT 
+        `v`.`selected_date` AS `selected_date`
+    FROM
+        (SELECT 
+            ('1970-01-01' + INTERVAL (((((`t4`.`i` * 10000) + (`t3`.`i` * 1000)) + (`t2`.`i` * 100)) + (`t1`.`i` * 10)) + `t0`.`i`) DAY) AS `selected_date`
+        FROM
+            (((((SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t0`
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t1`)
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t2`)
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t3`)
+        JOIN (SELECT 0 AS `i` UNION SELECT 1 AS `1` UNION SELECT 2 AS `2` UNION SELECT 3 AS `3` UNION SELECT 4 AS `4` UNION SELECT 5 AS `5` UNION SELECT 6 AS `6` UNION SELECT 7 AS `7` UNION SELECT 8 AS `8` UNION SELECT 9 AS `9`) `t4`)) `v`
+    WHERE
+        (`v`.`selected_date` BETWEEN '2019-02-01' AND '2019-02-19')
+
+---view5: totalvisits
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `totalvisits` AS    SELECT         `datelist`.`selected_date` AS `date`,        COUNT(0) AS `totalvisit`    FROM        ((`datelist`        JOIN `visitevent`)        JOIN `visitsite` ON (((`visitevent`.`sitename` = `visitsite`.`sitename`)            AND (`visitevent`.`startdate` = `datelist`.`selected_date`))))    GROUP BY `datelist`.`selected_date`     UNION SELECT         `datelist`.`selected_date` AS `selected_date`, 0 AS `0`    FROM        `datelist`    WHERE        (NOT (`datelist`.`selected_date` IN (SELECT                 `datelist`.`selected_date` AS `date`            FROM                ((`datelist`                JOIN `visitevent`)                JOIN `visitsite` ON (((`visitevent`.`sitename` = `visitsite`.`sitename`)                    AND (`visitevent`.`startdate` = `datelist`.`selected_date`))))            GROUP BY `datelist`.`selected_date`)))
+
+---view6: total_revenues_visit
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `total_revenues_visit` AS    SELECT         `datelist`.`selected_date` AS `selected_date`,        SUM(`event`.`price`) AS `totalrevenue`    FROM        ((`datelist`        JOIN `event`)        JOIN `visitevent` ON (((`event`.`name` = `visitevent`.`ename`)            AND (`visitevent`.`startdate` = `event`.`startdate`)            AND (`visitevent`.`sitename` = `event`.`sitename`)            AND (`datelist`.`selected_date` = `visitevent`.`date`))))    GROUP BY `datelist`.`selected_date`     UNION SELECT         `datelist`.`selected_date` AS `selected_date`, 0 AS `0`    FROM        `datelist`    WHERE        (NOT (`datelist`.`selected_date` IN (SELECT                 `datelist`.`selected_date` AS `selected_date`            FROM                ((`datelist`                JOIN `event`)                JOIN `visitevent` ON (((`event`.`name` = `visitevent`.`ename`)                    AND (`visitevent`.`startdate` = `event`.`startdate`)                    AND (`visitevent`.`sitename` = `event`.`sitename`)                    AND (`datelist`.`selected_date` = `visitevent`.`date`))))            GROUP BY `datelist`.`selected_date`)))
+
+
+
+Screen 30: Manager daily detail
+Task1: retrieve daily detail of event name, staff name, visits, revenue based on the date
+---Stored Procedure: sc30
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc30`(in input_date date)BEGINSELECT new3.Event_Name, new3.Staff_Name, new3.Visits, event.price*new3.Visits AS Revenue, event.startdate as dateFROM new3, eventWHERE event.name = new3.Event_Name and event.startdate = input_date;END
+
+---view1: new3
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `new3` AS    SELECT         `n1`.`eventname` AS `Event_Name`,        `n2`.`username` AS `Staff_Name`,        `n1`.`visit` AS `Visits`    FROM        ((SELECT             COUNT(0) AS `visit`, `VE`.`ename` AS `eventname`        FROM            `visitevent` `VE`        GROUP BY `VE`.`ename`) `n1`        JOIN (SELECT             `S`.`username` AS `username`        FROM            `staff` `S`) `n2`)
+
+
+
+Screen 31: Staff view schedule
+Task1: retrieve the schedule of event name, site name, start date, end date, staff count based on the inputs: event name, description keywords, start date, end date
+---Stored Procedure: sc31
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc31`(in input_EventName varchar(50), in input_descriptionKeyword longtext, in input_startdate date, in input_enddate date)BEGINSELECT distinct E.name AS eventname, E.sitename AS sitename, E.startdate AS startdate, E.enddate AS enddate, E.description as description, view31.scount AS Staff_CountFROM event AS EJOINview31where view31.eventname = E.nameand eventname = input_EventName and description like concat('%',input_descriptionKeyword,'%') and startdate > input_startdate and enddate < input_enddate;END
+
+---view1: view31
+CREATE     ALGORITHM = UNDEFINED     DEFINER = `root`@`localhost`     SQL SECURITY DEFINERVIEW `view31` AS    SELECT         COUNT(0) AS `scount`, `VE`.`eventname` AS `eventname`    FROM        `assign_to` `VE`    GROUP BY `VE`.`eventname`
+
+
+
+Screen 32: Staff event detail
+Task1: retrieve event details based on inputs: event name and staff name
+---Stored Procedure: sc32
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sc32`(in input_eventname varchar(50), in input_staffname varchar(50))BEGINSELECT E.name AS Event, E.sitename AS Site, E.startdate AS Start_Date, E.enddate AS End_Date, (E.enddate - E.startdate) AS Duration_Days, VE.staffusername AS Staff_Assigned, E.capacity AS Capacity, E.price AS Price, E.description AS DescriptionFROM event AS E, assign_to AS VEWHERE VE.eventname = E.name AND VE.startdate = E.startdate AND E.name = input_eventname and VE.staffusername = input_staffname;END
+
+
+
+Screen 33: Visitor Explore Event
+Task1: site name drop list
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s33_site_list`()
+BEGIN
+select name 
+from site;
+END
+
+
+Task2: filter
+---create a event view without filter
+create view s33_explore_event as
+select name as `Event Name`, event.sitename as `Site Name`, price as `Ticket Price`, capacity - count(*) as `Ticket Remaining`, count(*) as `Total Visits`
+, description, event.startdate, event.enddate
+from event join visitevent on name = ename and event.startdate = visitevent.startdate and event.sitename = visitevent.sitename
+group by name, event.startdate, event.sitename
+
+---filter(Note: input sitename is a list and notvisit, notsoldout both are bool. It means these two input should be 0 or 1.)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s33_filter_event`(in myusername varchar(50), in eventname varchar(50), in keyword longtext, in mysitename varchar(500), in mystartdate date, in myenddate date, in lowvisit decimal(6,0), in uppervisit decimal(6,0), in lowprice decimal(2,0), in upperprice decimal(2,0), in notvisit decimal(1,0), in notsoldout decimal(1,0))
+BEGIN
+select `Event Name`, `Site Name`, `Ticket Price`, `Ticket RemaIning`, `Total Visits`, count(*) as `My Visits`
+from s33_explore_event left join visitevent on `Event Name` = ename and `Site Name` = sitename and s33_explore_event.startdate = visitevent.startdate
+where  `Event Name` like eventname and description like keyword and find_in_set(`Site Name`,mysitename) and s33_explore_event.startdate >= mystartdate and s33_explore_event.enddate <= myenddate and `Ticket Price` >= lowprice and `Ticket Price` <= upperprice and `Total Visits` >= lowvisit and `Total Visits` <= uppervisit and username = myusername and `Ticket RemaIning` > notsoldout + 1
+group by `Event Name`, s33_explore_event.startdate, `Site Name`
+having count(*) > 1000000 * notvisit
+union
+select `Event Name`, `Site Name`, `Ticket Price`, `Ticket RemaIning`, `Total Visits`, 0 as `My Visits`
+from s33_explore_event left join visitevent on `Event Name` = ename and `Site Name` = sitename and s33_explore_event.startdate = visitevent.startdate
+where  `Event Name` like eventname and description like keyword and find_in_set(`Site Name`,mysitename) and s33_explore_event.startdate >= mystartdate and s33_explore_event.enddate <= myenddate and `Ticket Price` >= lowprice and `Ticket Price` <= upperprice and `Total Visits` >= lowvisit and `Total Visits` <= uppervisit and `Ticket RemaIning` > notsoldout + 1 and (`Event Name`,`Site Name`, `Ticket Price`, `Ticket RemaIning`, `Total Visits`) not in (select `Event Name`, `Site Name`, `Ticket Price`, `Ticket RemaIning`, `Total Visits`
+from s33_explore_event left join visitevent on `Event Name` = ename and `Site Name` = sitename and s33_explore_event.startdate = visitevent.startdate
+where  `Event Name` like eventname and description like keyword and find_in_set(`Site Name`,mysitename) and s33_explore_event.startdate >= mystartdate and s33_explore_event.enddate <= myenddate and `Ticket Price` >= lowprice and `Ticket Price` <= upperprice and `Total Visits` >= lowvisit and `Total Visits` <= uppervisit and username = myusername and `Ticket RemaIning` > notsoldout + 1
+group by `Event Name`, s33_explore_event.startdate, `Site Name`)
+group by `Event Name`, s33_explore_event.startdate, `Site Name`;
+END
+
+
+Task3: event detail
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s33_event_detail`(in eventname varchar(50), in sitename  varchar(50), in mystartdate date)
+BEGIN
+SELECT `Event Name`, `Site Name`, `Ticket Price`, `Ticket RemaIning`, description, startdate, enddate FROM atlantabeltline.s33_explore_event
+where`Event Name` = eventname and `Site Name` = sitename and startdate = mystartdate;
+END
+
+
+
+Screen 34: Visitor Event Detail
+Task1: log visit
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s34_new_visit_event`(in my_event varchar(50), in my_site varchar(50), in my_startdate DATE, in my_username varchar(50), my_date DATE)
+BEGIN
+insert into visitevent values(my_username, my_event, my_startdate, my_site, my_date);
+delete from visitevent where date < startdate or date > (select enddate from event where name = my_event and startdate = my_startdate and sitename = my_site) and username = my_username and startdate = my_startdate and ename = my_event and sitename = my_site;
+delete from visitevent where date = my_date and username = my_username and startdate = my_startdate and ename = my_event and sitename = my_site and exists(select * from s33_explore_event where `Ticket Remaining` < 0);
+END
+
+
+
+Screen 35: Visitor Explore Site
+Task1: filter 
+---create a view to show all visits' site and event
+create view s35_totalvisit as
+select username, sitename, date
+from visitsite
+union all
+select username, sitename, date
+from visitevent;
+
+---create a view to show total visits
+create view s35_site_visit as
+select name, count(*) as `Total Visits`, openeveryday, date
+from site join s35_totalvisit on sitename = name
+group by name;
+
+---create a view to show event count
+create view s35_site_event as
+select site.name, count(*) as `Event Count`
+from site join event on sitename = site.name
+group by name;
+
+
+---create a view conbine event count and total visits
+create view s35_explore_site as
+select s35_site_event.name, `Event Count`, `Total Visits`, openeveryday
+from s35_site_event join s35_site_visit on s35_site_visit.name = s35_site_event.name;
+
+---filter(Note: input sitename is a list and notvisit is bool. It means input should be 0 or 1.)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s35_filter_site`(in myusername varchar(50),in mysitename varchar(500), in isopeneveryday varchar(50), in startdate date, in enddate date, in lowvisit decimal(6,0), in uppervisit decimal(6,0), in lowevent decimal(6,0), in upperevent decimal(6,0), in notvisit decimal(1,0))
+BEGIN
+select name, `Event Count`, `Total Visits`, count(*) as `My Visit`
+from s35_explore_site join s35_totalvisit on name = sitename
+where username = myusername and `Total Visits` >= lowvisit and  `Total Visits` <= uppervisit and `Event Count` >= lowevent and `Event Count` <= upperevent and find_in_set(openeveryday,isopeneveryday) and date >= startdate and date <= enddate and find_in_set(name,mysitename)
+group by name
+having count(*) > 1000000 * notvisit
+union
+select name, `Event Count`, `Total Visits`, 0 as `My Visit`
+from s35_explore_site join s35_totalvisit on name = sitename
+where `Total Visits` >= lowvisit and  `Total Visits` <= uppervisit and `Event Count` >= lowevent and `Event Count` <= upperevent and find_in_set(openeveryday,isopeneveryday) and date >= startdate and date <= enddate and find_in_set(name,mysitename) and (name) not in (select name
+from s35_explore_site join s35_totalvisit on name = sitename
+where username = myusername and `Total Visits` >= lowvisit and  `Total Visits` <= uppervisit and `Event Count` >= lowevent and `Event Count` <= upperevent and find_in_set(openeveryday,isopeneveryday) and date >= startdate and date <= enddate and find_in_set(name,mysitename) group by name)
+group by name;
+END
+
+
+Task2: Transit Detail
+---create all transit detail with price
+create view s35_transitdetail as
+select transit.route, transit.type, price, name
+from site join transit join connect on name = sitename and connect.type = transit.type and connect.route = transit.route;
+
+---see transit detail
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s35_transit_detail`(in my_site varchar(50), in my_type varchar(50))
+BEGIN
+select connect.route, connect.type, price, count(*) as `Connected Sites`
+from connect join s35_transitdetail on connect.route = s35_transitdetail.route and connect.type = s35_transitdetail.type
+where s35_transitdetail.name = my_site and s35_transitdetail.type = my_type;
+END
+
+
+Task3: Site detail
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s35_site_detail`(in my_site varchar(50))
+BEGIN
+select name, openeveryday, address
+from site
+where name = my_site;
+END
+
+
+
+Screen 36: Visitor Transit Detail
+Task1: log visit
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s36_new_visit_transit`(in my_username varchar(50), in my_type varchar(50), in my_route varchar(50),in my_date DATE)
+BEGIN
+insert into take values(my_username, my_type, my_route, my_date);
+END
+
+
+
+Screen 37: Visitor site detail
+Task1: log visit
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s37_new_visit_site`(in my_username varchar(50), in my_site varchar(50), in my_date DATE)
+BEGIN
+insert into visitsite values(my_username, my_site, my_date);
+END
+
+
+
+Screen 38: visitor visit history 
+Task1: visitor visited sitename
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s38_visitor_site`(in my_username varchar(50))
+BEGIN
+select distinct sitename
+from visitsite
+where username = my_username;
+END
+
+
+Task2: filter with startdate and enddate
+---create a view with all information
+create view s38_visit_history as
+select username, null as `ename`, null as `startdate`, sitename, date, 0 as `price`
+from visitsite
+union
+select username, ename, visitevent.startdate, visitevent.sitename, date, price
+from visitevent join event on name = ename and event.startdate = visitevent.startdate and event.sitename = visitevent.sitename;
+
+---filter (Note: sitename can be a list)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s38_filter_date`(in my_username varchar(50), in my_event varchar(500), in my_site varchar(500), in my_start date, in my_end date)
+BEGIN
+select date, `ename`, sitename, price
+from s38_visit_history
+where username = my_username and date >= my_start and date <= my_end and `ename` = my_event and find_in_set(sitename,my_site)
+union
+select date, `ename`, sitename, price
+from s38_visit_history
+where username = my_username and date >= my_start and date <= my_end and `ename` <=> null and find_in_set(sitename,my_site);
+END
+
+
+Task3: filter without startdate and enddate (Note: sitename can be a list)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `s38_filter_nodate`(in my_username varchar(50), in my_event varchar(500), in my_site varchar(500))
+BEGIN
+select date, `ename`, sitename, price
+from s38_visit_history
+where username = my_username and `ename` = my_event and find_in_set(sitename,my_site)
+union
+select date, `ename`, sitename, price
+from s38_visit_history
+where username = my_username and `ename` <=> null and find_in_set(sitename,my_site);
+END
+
